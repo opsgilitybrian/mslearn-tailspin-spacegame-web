@@ -34,10 +34,18 @@ steps:
   workingDirectory: $(wwwrootDir)
 
 - task: DotNetCoreCLI@2
-  displayName: 'Restore project dependencies'
+  displayName: 'Restore project dependencies 1'
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
+
+- task: NuGetCommand@2
+  displayName: 'Restore project dependencies 2'
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    vstsFeed: 'Space Game - MS LEARN/Tailspin.SpaceGame.Web.Models'
 
 - template: templates/build.yml
   parameters:
