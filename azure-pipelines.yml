@@ -58,7 +58,7 @@ steps:
   displayName: 'Run unit tests - $(buildConfiguration)'
   inputs:
     command: 'test'
-    arguments: '--no-build --configuration $(buildConfiguration)'
+    arguments: '--no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
     publishTestResults: true
     projects: '**/*.Tests.csproj'
 
@@ -67,13 +67,14 @@ steps:
   inputs:
     command: custom
     custom: tool
-    arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines'
+    arguments: 'run reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines';Cobertura
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
     codeCoverageTool: 'cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
